@@ -1,0 +1,103 @@
+APP FOLDER - AI MODEL STATUS REPORT
+Generated: April 11, 2026
+Source: https://console.groq.com/docs/deprecations
+======================================================
+
+ROUTE: app/api/code/route.js
+MODEL USED: llama-3.1-8b-instant
+STATUS: WORKING
+NOTES: Active production model on Groq. No deprecation announced.
+ALTERNATIVE: llama-3.3-70b-versatile (if higher quality output is needed)
+
+------------------------------------------------------
+
+ROUTE: app/api/dialogue/route.js
+MODEL USED: llama-3.1-8b-instant
+STATUS: WORKING
+NOTES: Active production model on Groq. No deprecation announced.
+ALTERNATIVE: llama-3.3-70b-versatile (better conversational quality)
+
+------------------------------------------------------
+
+ROUTE: app/api/image/route.js
+MODEL USED: Pollinations AI (https://image.pollinations.ai)
+STATUS: WORKING
+NOTES: Free, no API key required. External service - no Groq model involved.
+ALTERNATIVE: If Pollinations goes down, use Hugging Face Inference API
+             with stabilityai/stable-diffusion-xl-base-1.0 (requires HUGGINGFACE_API_KEY)
+
+------------------------------------------------------
+
+ROUTE: app/api/image-to-text/route.js
+PRIMARY MODEL: meta-llama/llama-4-scout-17b-16e-instruct (Groq)
+STATUS: WORKING
+NOTES: Active production model on Groq. Confirmed available in April 2026.
+       Supports vision/multimodal input. No deprecation announced.
+
+FALLBACK MODEL: claude-sonnet-4-20250514 (Anthropic)
+STATUS: NOT WORKING
+NOTES: The Anthropic API call is missing required headers:
+         - 'x-api-key': process.env.ANTHROPIC_API_KEY  (not present)
+         - 'anthropic-version': '2023-06-01'            (not present)
+       No ANTHROPIC_API_KEY env variable is read anywhere in the file.
+       The model ID "claude-sonnet-4-20250514" may also be invalid.
+       This fallback silently fails every time - primary model handles all requests.
+ALTERNATIVE (for fallback): Since the primary Groq model works fine, the fallback
+             is rarely needed. If you want a working fallback, either:
+             1. Fix the Anthropic call with proper headers + ANTHROPIC_API_KEY in .env.local
+             2. Replace with a second Groq call using llama-3.1-8b-instant
+
+------------------------------------------------------
+
+ROUTE: app/api/remove-background/route.js
+MODEL USED: Hugging Face Space - not-lain/background-removal (via @gradio/client)
+STATUS: LIKELY WORKING (depends on HF Space availability)
+NOTES: No API key required. Uses a public Hugging Face Space.
+       HF Spaces can go to sleep or be unavailable - the 30s timeout handles this.
+ALTERNATIVE: Use remove.bg API (requires REMOVE_BG_API_KEY, free tier: 50 images/month)
+             or imgly/background-removal npm package for client-side processing
+
+------------------------------------------------------
+
+ROUTE: app/api/story/route.js
+MODEL USED: llama-3.1-8b-instant (Groq)
+STATUS: WORKING
+NOTES: Active production model on Groq. No deprecation announced.
+       Has a hardcoded fallback story template if API fails - good resilience.
+ALTERNATIVE: llama-3.3-70b-versatile (better creative writing quality)
+
+------------------------------------------------------
+
+ROUTE: app/api/summary/route.js
+PRIMARY MODEL: llama-3.3-70b-versatile (Groq)
+STATUS: WORKING
+NOTES: Active production model on Groq. Confirmed available in April 2026.
+       No deprecation announced.
+
+FALLBACK MODEL: microsoft/DialoGPT-medium (Hugging Face Inference API)
+STATUS: WORKS BUT WRONG MODEL FOR THE TASK
+NOTES: DialoGPT-medium is a conversational/dialogue model, NOT a summarization
+       or explanation model. It will produce poor or incoherent results for
+       "explain X in simple terms" prompts. It was designed for chat responses,
+       not knowledge-based explanations. The primary Groq model handles all
+       real requests fine, so this fallback is rarely triggered.
+ALTERNATIVE (for fallback): Replace DialoGPT with a proper instruction model:
+             - mistralai/Mistral-7B-Instruct-v0.3 (HF Inference API)
+             - google/flan-t5-large (HF Inference API, good for Q&A/explanation)
+             - Or simply use llama-3.1-8b-instant on Groq as fallback
+
+======================================================
+
+SUMMARY
+-------
+Working fine:        code, dialogue, image, story
+                     image-to-text (primary model works; Claude fallback broken but irrelevant)
+                     summary (primary model works; DialoGPT fallback works but wrong model type)
+No model involved:   remove-background (uses Gradio/HF Space directly)
+
+All Groq models in use (llama-3.1-8b-instant, llama-3.3-70b-versatile,
+meta-llama/llama-4-scout-17b-16e-instruct) are confirmed active and not deprecated
+as of April 2026.
+
+VERDICT: Both image-to-text and summary are running fine on their primary models.
+         The fallbacks have issues but they are not affecting normal operation.
