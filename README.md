@@ -112,6 +112,3 @@ This app represents an ever-evolving Swiss-army knife for LLMs. If you discover 
 3. Submit a Pull Request.
 
 ---
-<div align="center">
-  <i>Built with ❤️ to bridge Ideas and Output.</i>
-</div>
