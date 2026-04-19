@@ -27,7 +27,14 @@ export default function ImageOutput({ generatedImage, loading, onDownload }) {
     if (generatedImage) {
         return (
             <>
-                <div className="flex justify-end mb-4">
+                <div className="text-center">
+                    <img
+                        src={generatedImage}
+                        alt="Generated artwork"
+                        className="max-w-full max-h-80 rounded-lg shadow-md mx-auto border border-slate-200"
+                    />
+                </div>
+                <div className="flex justify-center mt-4">
                     <button
                         onClick={handleDownload}
                         className={`flex items-center gap-2 px-3 py-2 rounded-lg font-medium text-sm transition-all ${downloaded
@@ -47,13 +54,6 @@ export default function ImageOutput({ generatedImage, loading, onDownload }) {
                             </>
                         )}
                     </button>
-                </div>
-                <div className="text-center">
-                    <img
-                        src={generatedImage}
-                        alt="Generated artwork"
-                        className="max-w-full max-h-80 rounded-lg shadow-md mx-auto border border-slate-200"
-                    />
                 </div>
             </>
         );
