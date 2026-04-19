@@ -1,21 +1,26 @@
-export default function PageHeader({ icon, title, subtitle }) {
+export default function PageHeader({ icon, title, subtitle, accentColor = '#5b6ef5' }) {
     return (
-        <div className="text-center mb-12 space-y-4">
-            <div className="flex items-center justify-center gap-3">
+        <div className="mb-10 space-y-3">
+            <div className="flex items-center gap-3">
                 {icon && (
-                    <div className="p-3 bg-gradient-to-br from-blue-100 to-blue-50 rounded-xl">
+                    <div
+                        className="p-2.5 rounded-xl"
+                        style={{ background: accentColor + '18' }}
+                    >
                         {icon}
                     </div>
                 )}
-                <h1 className="text-4xl md:text-5xl font-bold tracking-tight text-slate-900">
-                    {title}
-                </h1>
+                <div>
+                    <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-900 leading-tight">
+                        {title}
+                    </h1>
+                    {subtitle && (
+                        <p className="text-slate-500 text-sm mt-0.5 leading-relaxed">{subtitle}</p>
+                    )}
+                </div>
             </div>
-            {subtitle && (
-                <p className="text-lg text-slate-600 max-w-2xl mx-auto leading-relaxed">
-                    {subtitle}
-                </p>
-            )}
+            {/* accent underline */}
+            <div className="h-0.5 w-16 rounded-full" style={{ background: `linear-gradient(90deg, ${accentColor}, transparent)` }} />
         </div>
     );
 }

@@ -1,44 +1,47 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 
-export default function ToolCard({ tool }) {
+export default function ToolCard({ tool, featured = false }) {
     return (
-        <Link href={tool.href}>
-            <div className="group h-full bg-white rounded-xl border border-slate-200 hover:border-slate-300 transition-all hover:shadow-lg hover:-translate-y-1 duration-300 overflow-hidden">
-                <div className="p-6 h-full flex flex-col">
+        <Link href={tool.href} className={featured ? 'col-span-2' : ''}>
+            <div className={`card-lift group h-full bg-white rounded-2xl border border-orange-100/60 hover:border-orange-300/50 overflow-hidden transition-all shadow-sm hover:shadow-md ${featured ? 'p-8' : 'p-5'}`}>
+                <div className={`flex ${featured ? 'flex-row items-center gap-8' : 'flex-col'}`}>
                     {/* Icon */}
-                    <div className="mb-4">
-                        <div className={`w-12 h-12 ${tool.color} rounded-lg flex items-center justify-center text-white group-hover:scale-110 transition-transform duration-300`}>
-                            {tool.icon}
+                    <div
+                        className={`${featured ? 'w-16 h-16 flex-shrink-0' : 'w-11 h-11 mb-4'} rounded-xl flex items-center justify-center text-white transition-transform duration-300 group-hover:scale-110`}
+                        style={{ background: tool.accentColor || '#f97316' }}
+                    >
+                        {tool.icon}
+                    </div>
+
+                    <div className="flex-1 min-w-0">
+                        {/* Badges */}
+                        <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+                            {tool.isNew && (
+                                <span className="text-[10px] font-black text-white px-2 py-0.5 rounded-full uppercase tracking-wide"
+                                    style={{ background: 'linear-gradient(135deg, #f97316, #eab308)' }}>
+                                    New
+                                </span>
+                            )}
+                            {tool.model && (
+                                <span className="text-[10px] text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full font-medium">
+                                    {tool.model}
+                                </span>
+                            )}
                         </div>
-                    </div>
 
-                    {/* Title */}
-                    <h3 className="text-lg font-bold text-slate-900 mb-2">
-                        {tool.title}
-                    </h3>
+                        <h3 className={`font-bold text-slate-900 mb-1 ${featured ? 'text-2xl' : 'text-base'}`}>
+                            {tool.title}
+                        </h3>
+                        <p className={`text-slate-500 leading-relaxed ${featured ? 'text-base' : 'text-sm'}`}>
+                            {tool.description}
+                        </p>
 
-                    {/* Description */}
-                    <p className="text-slate-600 text-sm mb-4 flex-1">
-                        {tool.description}
-                    </p>
-
-                    {/* Tags */}
-                    <div className="flex flex-wrap gap-2 mb-4">
-                        {tool.tags.slice(0, 2).map((tag, tagIndex) => (
-                            <span
-                                key={tagIndex}
-                                className="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-700"
-                            >
-                                {tag}
-                            </span>
-                        ))}
-                    </div>
-
-                    {/* CTA Button */}
-                    <div className="flex items-center gap-2 text-blue-600 font-semibold group-hover:gap-3 transition-all">
-                        <span>Open Tool</span>
-                        <ArrowRight className="w-4 h-4" />
+                        <div className="flex items-center gap-1.5 font-semibold mt-4 text-sm transition-all group-hover:gap-2.5"
+                            style={{ color: '#f97316' }}>
+                            Open tool
+                            <ArrowRight className="w-4 h-4" />
+                        </div>
                     </div>
                 </div>
             </div>
